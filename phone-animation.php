@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Phone Hover Animation
- * Plugin URI: https://yoursite.com
+ * Plugin URI: https://rfo.mikkelsdesign.dk/
  * Description: Animated phone that rises on hover to reveal text below
- * Version: 1.1.0
- * Author: Celinamedia
- * Author URI: https://yoursite.com
+ * Version: 1.1.1
+ * Author: Celina Bækgaard
+ * Author URI: https://github.com/celinamedia
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
