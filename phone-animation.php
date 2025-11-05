@@ -3,28 +3,26 @@
  * Plugin Name: Phone Hover Animation
  * Plugin URI: https://rfo.mikkelsdesign.dk/
  * Description: Animated phone that rises on hover to reveal text below
- * Version: 1.1.1
+ * Version: 1.1.2
  * Author: Celina Bækgaard
  * Author URI: https://github.com/celinamedia
  * License: GPL v2 or later
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 
-// Exit if accessed directly
+/* Kun adgang fra wordpress og kan ikke tilgåes direkte */
 if (!defined('ABSPATH')) {
     exit;
 }
 
-// Define plugin constants
-define('PHONE_ANIMATION_VERSION', '1.0.0');
+/* Definerer konstanter til pluginet */
+define('PHONE_ANIMATION_VERSION', '1.1.2');
 define('PHONE_ANIMATION_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('PHONE_ANIMATION_PLUGIN_URL', plugin_dir_url(__FILE__));
 
-/**
- * Enqueue plugin styles
- */
+/* Tilføjer CSS filen til side med shortcode */
 function phone_animation_enqueue_assets() {
-    // Only enqueue on pages that have the shortcode
+    // // Loader kun CSS hvor shortcode bruges
     global $post;
     if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'phone_animation')) {
         wp_enqueue_style(
@@ -34,15 +32,13 @@ function phone_animation_enqueue_assets() {
             PHONE_ANIMATION_VERSION
         );
     }
-}
+} 
+/* Indlæser pluginets CSS-fil på sider med [phone_animation]*/ 
 add_action('wp_enqueue_scripts', 'phone_animation_enqueue_assets');
 
-/**
- * Shortcode to display the phone animation
- * Usage: [phone_animation link="https://yourapp.com" title="Download Our App" subtitle="Experience the future"]
- */
+/* Shortcode til phone animation */
 function phone_animation_shortcode($atts) {
-    // Extract shortcode attributes with defaults
+    /* Sætter standardværdier for shortcode */
     $atts = shortcode_atts(array(
         'link' => '#',
         'title' => 'Capture Plastic Waste',
@@ -50,16 +46,16 @@ function phone_animation_shortcode($atts) {
         'phone_image' => '',
     ), $atts, 'phone_animation');
     
-    // Determine phone image source
+    /* vælger telefonbillede */
     if (!empty($atts['phone_image'])) {
-        // Use custom image URL from shortcode
+        /* Bruger billedet fra linket */
         $phone_src = esc_url($atts['phone_image']);
     } else {
-        // Use bundled default image
+        /* Bruger standardbilledet */
         $phone_src = esc_url(PHONE_ANIMATION_PLUGIN_URL . 'assets/images/iphoneRFOT.png');
     }
     
-    // Start output buffering
+    /* Gemmer indhold midlertidigt (output buffering) */
     ob_start();
     ?>
     
@@ -80,13 +76,12 @@ function phone_animation_shortcode($atts) {
     </div>
     
     <?php
+    /* Viser det gemte indhold*/
     return ob_get_clean();
 }
 add_shortcode('phone_animation', 'phone_animation_shortcode');
 
-/**
- * Add settings link on plugin page
- */
+/* Giver plugin et settings-link */
 function phone_animation_settings_link($links) {
     $settings_link = '<a href="options-general.php?page=phone-animation-settings">Settings</a>';
     array_unshift($links, $settings_link);
