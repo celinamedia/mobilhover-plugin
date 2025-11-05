@@ -1,2 +1,113 @@
-# mobilhover-plugin
-Et plugin til Storyscaping eksamen del 2 (MDU-E24CONT). 
+# Mobilhover-plugin
+Et simpelt, interaktivt WordPress-plugin udviklet som en del af Storyscaping-projektet for **Race for Oceans Technology**.  
+Plugin’et skaber en hover-animation, hvor en telefon bevæger sig og afslører tekst. 
+
+# Brug af AI
+### Anvendte AI værktøjer:
+- **Claude.ai**
+    - Anvendt til at opbygge den grundlæggende struktur og layout i pluginet
+
+- **ChatGPT**
+    - Benyttet til fejlfinding og debugging af PHP- og CSS-filer
+    - Givet forslag til optimering og semantisk strukturering af koden
+    - Hjælp til udarbejdelse af README.md-struktur og dokumentation
+
+### Manuel tilpasning og egen indsats
+
+Efterfølgende er al kode blevet manuelt gennemgået, testet og tilpasset.
+Kommentarer genereret af Claude.ai er omskrevet og udvidet, så de afspejler funktionaliteten mere præcist og i mit eget sprog.
+Ændringer og egen tilpasning kan dokumenteres via commits i det tilknyttede GitHub-repository.
+Ingen AI-genereret kode er anvendt uden manuel evaluering og test i WordPress-miljøet.
+
+# Formål
+Formålet med dette plugin er at tilføje et visuelt og interaktivt element til Race for Oceans Technologys WordPress-site.
+
+Det er udviklet som en del af Storyscaping-forløbet for at vise forståelse for WordPress-pluginstruktur, animationer og brugerinteraktion i frontend.
+
+# Struktur i php fil
+I mit plugin fungerer `phone-animation.php` som hovedfilen, der håndterer indlæsning af stylesheet og genereringen af selve HTML-strukturen via en shortcode.
+
+
+Øverst i filen defineres pluginets grundlæggende information:
+```PHP
+/**
+ * Plugin Name: Phone Hover Animation
+ * Plugin URI: https://rfo.mikkelsdesign.dk/
+ * Description: Animated phone that rises on hover to reveal text below
+ * Version: 1.1.3
+ * Author: Celina Bækgaard
+ * Author URI: https://github.com/celinamedia
+ * License: GPL v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ */
+```
+
+
+Jeg har løbende opdateret `Version:` nummeret efter hvert commit til GitHub.
+
+## Shortcode
+I mit plugin bruges en shortcode til at vise HTML-strukturen direkte i WordPress.
+
+## Funktionens opbygning
+Funktionen starter med at definere et array af standardværdier ved hjælp af shortcode_atts().
+
+
+```PHP
+/* Shortcode til phone animation */
+function phone_animation_shortcode($atts) {
+    /* Sætter standardværdier for shortcode */
+    $atts = shortcode_atts(array(
+        'link' => '#',
+        'title' => 'Capture Plastic Waste',
+        'subtitle' => '',
+        'phone_image' => '',
+    ), $atts, 'phone_animation'); 
+```
+Denne PHP-funktion bruges til at kombinere de værdier, der er skrevet i shortcoden, med de standardværdier, jeg har angivet i pluginet. 
+
+### Valg af billede
+---
+Efter at shortcode-attributterne er defineret, tjekker funktionen, om brugeren har angivet et billede.
+Hvis ikke, bruges et standardbillede fra pluginets mappe.
+
+``` PHP
+    /* vælger telefonbillede */
+    if (!empty($atts['phone_image'])) {
+        /* Bruger billedet fra linket */
+        $phone_src = esc_url($atts['phone_image']);
+    } else {
+        /* Bruger standardbilledet */
+        $phone_src = esc_url(PHONE_ANIMATION_PLUGIN_URL . 'assets/images/iphoneRFOT.png');
+    }
+```
+Her bruges funktionen `esc_url()`, som er en indbygget WordPress-funktion til at rense og validere URL’er, før de vises i HTML.
+
+### Output buffering og HTML-struktur
+---
+Efter at shortcode-attributterne og billedet er defineret, starter funktionen en output-buffer med `ob_start()`.
+Det betyder, at alt HTML-indhold midlertidigt bliver gemt, i stedet for at blive vist med det samme.
+```PHP
+    ob_start();
+    //HTML indhold
+    return ob_get_clean();
+```
+```HTML
+    <div class="phone-animation-wrapper">
+        <div class="phone-container">
+            <div class="text-wrapper">
+                <div class="hidden-text">
+                    <h3><?php echo esc_html($atts['title']); ?></h3>
+                    <p><?php echo esc_html($atts['subtitle']); ?></p>
+                </div>
+            </div>
+            <div class="phone-wrapper">
+                <a href="<?php echo esc_url($atts['link']); ?>" class="phone-link">
+                    <img src="<?php echo $phone_src; ?>" alt="Phone with the text Capture Plastic Waste" class="phone-image">
+                </a>
+            </div>
+        </div>
+    </div>
+```
+
+Her bruges funktionen `esc_url()`, som er en indbygget WordPress-funktion til at rense og validere URL’er, før de vises i HTML.
+
