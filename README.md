@@ -2,6 +2,8 @@
 Et simpelt, interaktivt WordPress-plugin udviklet som en del af Storyscaping-projektet for **Race for Oceans Technology**.  
 Plugin’et skaber en hover-animation, hvor en telefon bevæger sig og afslører tekst. 
 
+![Phone animation](readme-media/mobilhover.gif)
+
 # Brug af AI
 ### Anvendte AI værktøjer:
 - **Claude.ai**
