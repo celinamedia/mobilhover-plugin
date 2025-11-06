@@ -43,17 +43,37 @@ I mit plugin fungerer `phone-animation.php` som hovedfilen, der håndterer indl�
 ```
 Jeg har løbende opdateret `Version:` nummeret efter hvert commit til GitHub.
 
-Funktionen `plugin_dir_url(__FILE__)` bliver brugt til at finde den korrekte sti til pluginets filer, fx billeder og CSS.
-Den fungerer på samme måde som plugins_url(), men tager automatisk udgangspunkt i den aktuelle PHP-fil.
-På den måde kan jeg hente filer direkte fra pluginets mappe, uanset hvor pluginet er installeret i WordPress.
+Funktionerne `plugin_dir_url(__FILE__)` og `plugin_dir_path(__FILE__)` bruges til at finde placeringen af pluginets filer.
 ``` PHP
 /* Definerer konstanter til pluginet */
 define('PHONE_ANIMATION_VERSION', '1.1.3');
 define('PHONE_ANIMATION_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('PHONE_ANIMATION_PLUGIN_URL', plugin_dir_url(__FILE__));
 ```
+Den første returnerer en URL-sti, som fx bruges til billeder og CSS, mens den anden returnerer filstien i WordPress’ backend.
+På den måde kan pluginet altid hente og indlæse sine filer korrekt.
 
+**Indlæsning af CSS-fil**
+```PHP
+/* Tilføjer CSS filen til side med shortcode */
+function phone_animation_enqueue_assets() {
+    // // Loader kun CSS hvor shortcode bruges
+    global $post;
+    if (is_a($post, 'WP_Post') && has_shortcode($post->post_content, 'phone_animation')) {
+        wp_enqueue_style(
+            'phone-animation-css',
+            PHONE_ANIMATION_PLUGIN_URL . 'assets/css/phone-animation.css',
+            array(),
+            PHONE_ANIMATION_VERSION
+        );
+    }
+} 
+/* Indlæser pluginets CSS-fil på sider med [phone_animation]*/ 
+add_action('wp_enqueue_scripts', 'phone_animation_enqueue_assets');
 
+```
+CSS-filen indlæses med `wp_enqueue_style()` og kobles til WordPress via `add_action()`.
+Den aktiveres kun, når shortcoden bruges, for at undgå unødig indlæsning.
 ## Funktionens opbygning
 Funktionen starter med at definere et array af standardværdier ved hjælp af shortcode_atts().
 
@@ -132,4 +152,4 @@ Det gør jeg med `add_shortcode()`, som forbinder navnet på shortcoden med selv
 add_shortcode('phone_animation', 'phone_animation_shortcode');
 ```
 `('phone_animation')` er navnet på den shortcode, man skriver i WordPress-editoren.
-`('phone_animation')` Er navnet på den funktion, der skal køres, når shortcoden kaldes.
+`('phone_animation_shortcode')` er navnet på den PHP-funktion, som bliver kaldt, når shortcoden indsættes på en side.
