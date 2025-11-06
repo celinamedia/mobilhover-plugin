@@ -3,7 +3,7 @@
  * Plugin Name: Phone Hover Animation
  * Plugin URI: https://rfo.mikkelsdesign.dk/
  * Description: Animated phone that rises on hover to reveal text below
- * Version: 1.1.3
+ * Version: 1.1.4
  * Author: Celina Bækgaard
  * Author URI: https://github.com/celinamedia
  * License: GPL v2 or later
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 }
 
 /* Definerer konstanter til pluginet */
-define('PHONE_ANIMATION_VERSION', '1.1.3');
+define('PHONE_ANIMATION_VERSION', '1.1.4');
 define('PHONE_ANIMATION_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('PHONE_ANIMATION_PLUGIN_URL', plugin_dir_url(__FILE__));
 

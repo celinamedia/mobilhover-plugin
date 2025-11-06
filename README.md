@@ -41,12 +41,18 @@ I mit plugin fungerer `phone-animation.php` som hovedfilen, der håndterer indl�
  * License URI: https://www.gnu.org/licenses/gpl-2.0.html
  */
 ```
-
-
 Jeg har løbende opdateret `Version:` nummeret efter hvert commit til GitHub.
 
-## Shortcode
-I mit plugin bruges en shortcode til at vise HTML-strukturen direkte i WordPress.
+Funktionen `plugin_dir_url(__FILE__)` bliver brugt til at finde den korrekte sti til pluginets filer, fx billeder og CSS.
+Den fungerer på samme måde som plugins_url(), men tager automatisk udgangspunkt i den aktuelle PHP-fil.
+På den måde kan jeg hente filer direkte fra pluginets mappe, uanset hvor pluginet er installeret i WordPress.
+``` PHP
+/* Definerer konstanter til pluginet */
+define('PHONE_ANIMATION_VERSION', '1.1.3');
+define('PHONE_ANIMATION_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('PHONE_ANIMATION_PLUGIN_URL', plugin_dir_url(__FILE__));
+```
+
 
 ## Funktionens opbygning
 Funktionen starter med at definere et array af standardværdier ved hjælp af shortcode_atts().
@@ -91,11 +97,20 @@ Det betyder, at alt HTML-indhold midlertidigt bliver gemt, i stedet for at blive
     //HTML indhold
     return ob_get_clean();
 ```
+`ob_get_clean()` henter derefter hele HTML-strukturen som én samlet tekststreng og sender den tilbage til WordPress.
+
+Her kunne man også have brugt variablen `$content` til at samle HTML’en, men jeg har i stedet valgt `ob_start()` for at gøre koden mere overskuelig.
+
+HTML-strukturen er bygget op i flere lag for at gøre animationen nem at styre med CSS.
+`phone-animation-wrapper` fungerer som det ydre container-element, der samler hele animationen.
+Inde i den ligger `phone-container`,som opdeler layoutet i to hoveddele:
+1. `text-wrapper` og `hidden-text`, som indeholder titlen og den tekst, der bliver synlig ved hover.
+2. `phone-wrapper`, som indeholder linket og billedet af telefonen.
 ```HTML
     <div class="phone-animation-wrapper">
         <div class="phone-container">
             <div class="text-wrapper">
-                <div class="hidden-text">
+                <div class="hidden-text"> ```
                     <h3><?php echo esc_html($atts['title']); ?></h3>
                     <p><?php echo esc_html($atts['subtitle']); ?></p>
                 </div>
@@ -109,5 +124,12 @@ Det betyder, at alt HTML-indhold midlertidigt bliver gemt, i stedet for at blive
     </div>
 ```
 
-Her bruges funktionen `esc_url()`, som er en indbygget WordPress-funktion til at rense og validere URL’er, før de vises i HTML.
-
+### Shortcode
+---
+Til sidst registreres funktionen som en shortcode i WordPress.
+Det gør jeg med `add_shortcode()`, som forbinder navnet på shortcoden med selve PHP-funktionen.
+``` PHP
+add_shortcode('phone_animation', 'phone_animation_shortcode');
+```
+`('phone_animation')` er navnet på den shortcode, man skriver i WordPress-editoren.
+`('phone_animation')` Er navnet på den funktion, der skal køres, når shortcoden kaldes.
