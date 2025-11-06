@@ -153,3 +153,34 @@ add_shortcode('phone_animation', 'phone_animation_shortcode');
 ```
 `('phone_animation')` er navnet på den shortcode, man skriver i WordPress-editoren.
 `('phone_animation_shortcode')` er navnet på den PHP-funktion, som bliver kaldt, når shortcoden indsættes på en side.
+
+# CSS - Styling og animation
+Pluginets CSS-fil styrer layout, placering og hover-animation.
+
+Formålet er at skabe en enkel og responsiv bevægelse, hvor telefonen hæver sig og afslører tekst nedenunder.
+```CSS
+.phone-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 2;
+}
+
+.phone-wrapper:hover {
+    transform: translate(-50%, -50%) translateY(-53px);
+}
+```
+Her bruges CSS-transformationer og transition-egenskaben til at skabe en flydende bevægelse, når brugeren holder musen over telefonen.
+
+---
+Teksten under billedet bliver gjort synlig med ændring af opacity og transform, hvilket giver en let og dynamisk effekt.
+```CSS
+.phone-wrapper:hover + .text-wrapper .hidden-text,
+.text-wrapper:has(~ .phone-wrapper:hover) .hidden-text {
+    opacity: 1;
+    transform: translateY(0);
+}
+```
